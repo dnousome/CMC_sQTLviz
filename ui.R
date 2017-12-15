@@ -47,7 +47,7 @@ ui <- tagList(
 }
 
 ")),
-    tabPanel("Li et al TWAS SNPs", value = "YangResults"),
+    tabPanel("Li et al TWAS SNPs", value = "yangResults"),
     tabPanel("Nalls et al PD GWAS SNPs", value = "GWASresults" ),
     tabPanel("About", value = "NA",
              
@@ -58,28 +58,41 @@ ui <- tagList(
                         div(
                           h2("What is this?"),
                           p( "This R", tags$a(href="https://shiny.rstudio.com","Shiny", target = "_blank"), 
-                             "app presents and visualises the results of running",
-                             a(href="https://github.com/davidaknowles/leafcutter", "Leafcutter,", target = "_blank"),
-                             "a software package that quantifies RNA-seq splicing in an annotation-free way - ", 
-                             strong( a(href="http://www.biorxiv.org/content/early/2016/03/16/044107", "read the paper.", target = "_blank")),
-                             "Full documentation of the package is available", a(href="http://davidaknowles.github.io/leafcutter/", "here.", target = "_blank") 
+                             "app presents and visualises splicing quantitative trait loci (sQTLs) discovered in 533 human frontal cortex samples.",
+                             "Samples were provided by the Common Mind Consortium.",
+                             "Data is available", a(href="https://www.synapse.org/#!Synapse:syn2759792", "here.", target = "_blank"),
+                             "Reference: " 
+                             ),
+                          p(
+                            "Fromer, M. et al. Gene expression elucidates functional impact of polygenic risk for schizophrenia.",em("Nat. Neurosci."), "10.1038/nn.4399 (2016)"
+                          ),
+                          p( "All 8944 associations between a SNP and a cluster of introns at FDR < 0.05 is presented.",
+                             "For comparison, you can subset the table to retrieve:"
+                          ),
+                          tags$ul(
+                             tags$li(strong("Li et al TWAS SNPs"), "SNPs from Figure 4 of Li et al"),
+                             tags$li(strong("Nalls et al PD GWAS SNPs"), "SNPs that also appear in a recent meta-analysis of Parkinson's Disease genome-wide association studies (Nalls et al, 2014,", em("Nat Gen"), "doi: 10.1038/ng.3043)")
+                          ),
+                          h2("Methods"),
+                          p( 
+                            "Yang I Li, Garrett Wong, Jack Humphrey and Towfique Raj. Prioritizing Parkinson's Disease genes using population-scale transcriptomic data.", em("bioRxiv"), "https://doi.org/10.1101/231001 (2017)",
+                            a(href="https://www.biorxiv.org/content/early/2017/12/08/231001", "Link", target="_blank" )
                           ),
                           h2( "Differential splicing events"),
                           p( "A cluster is defined as set of overlapping spliced junctions or introns.", 
                              "Clusters are initially ranked in the cluster results table by adjusted P value."
                           ),
                           tags$ul(
+                            tags$li( strong("SNP -") , "the rs ID of the single nucleotide polymorphism (SNP)." ), 
+                            tags$li( strong("Position -") , "the genomic coordinates (hg19) of the single nucleotide polymorphism (SNP)." ), 
                             tags$li( strong("Gene -"), "the HUGO gene sympbol for that gene."),
-                            tags$li( strong("Genomic location - "), "the coordinate span of the largest intron in the cluster."  ),
-                            # tags$li( strong("clusterID - "), "the unique id assigned to the cluster by leafcutter." ), 
-                            tags$li( strong("N -") , "the number of introns in the cluster." ), 
-                            tags$li( strong("q -"), "the Benjamini-Hochberg adjusted P value of the multinomial test of intron counts between conditions."),
-                            tags$li( strong("Annotation -"), "whether every intron in the cluster is supported by annotation (annotated) or contains at least one unannotated junction (cryptic).")
+                            tags$li( strong("Cluster coordinates - "), "the coordinate span of the the cluster."  ),
+                            tags$li( strong("q -"), "the Benjamini-Hochberg adjusted P value of the multinomial test of intron counts between conditions.")
                           ),
                           h2("Splicing event visualization"),
                           p("To view a cluster, click on a row in the cluster results table. This will start the plotting function.", 
                             "A cluster plot and table are generated each time a row in the cluster results is clicked."),
-                          p("For a chosen cluster, the mean number of splice junctions supporting each intron is calculated for both conditions and then normalised as a fraction of the total counts.",
+                          p("For a chosen cluster, the mean number of splice junctions supporting each intron is calculated for each genotype and then normalised as a fraction of the total counts.",
                             "Therefore for each condition the normalised counts will add up to 1.",
                             "Each intron is plotted as a line connecting its start and end coordinates with a thickness proportional to the displayed normalised count value.",
                             "The colour of the intron line indicates whether it is present in the annotation (red) or not (pink).",
@@ -103,9 +116,15 @@ ui <- tagList(
                           p("This visualises all clusters discovered by Leafcutter that can be assigned to a particular gene.",
                             "Exons are taken from the provided annotation and plotted as black rectangles.",
                             "Each junction in each cluster is plotted as curved line with uniform thickness.",
-                            #"Junctions from significant clusters are coloured according to the estimated dPSI (see above), whereas junctions from clusters that are not significant are coloured grey.",
                             "Note that the genomic coordinates are deliberately warped to give more space to the clusters."
                           ),
+                          
+                          h2("Junction-level visualization"),
+                          p("The junction with the most significant association to the SNP is bolded in the cluster-level plot.",
+                            "As well, the contribution of that junction to the cluster is calculated for each sample and split by genotype.",
+                            "The Beta and q values come from the logistic regression."
+                            ),
+                          
                           h2("Acknowledgments"),
                           p("This work was supported by the US National Institutes of Health (NIH grant R01AG054005).", 
                             "We thank the patients and families who donated material for CommonMind Consortium data.", 

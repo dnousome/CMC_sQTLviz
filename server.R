@@ -101,12 +101,11 @@ shinyServer(function(input, output) {
     datatable( df,
                 rownames = FALSE,
                # #escape=FALSE,
-               # #colnames = c('Genomic location'='coord','Gene'='gene','N'='N','Annotation'='annotation','q'='FDR'),
+                colnames = c('SNP'='SNP','Position'='SNP_pos','Gene'='gene','Cluster coordinates'='cluster_pos','q'='q'),
                 selection = 'single',
-               # caption = "Click on a row to plot the corresponding visualization.  q: Benjamini–Hochberg q-value.",
+                caption = "Click on a row to plot the corresponding visualization. q: lowest Benjamini–Hochberg q-value for that cluster.",
                 fillContainer = FALSE ,
                 options = list(
-                  #TODO: why doesn't this work?
                   language = list(
                     searchPlaceholder = "for a SNP or gene..."
                   )
